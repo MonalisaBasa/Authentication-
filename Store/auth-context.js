@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 
 const AuthContext =React.createContext({
     token: '',
@@ -16,6 +16,22 @@ export const AuthContextProvider = (props) =>{
         setToken(token);
         localStorage.setItem('token',token);
     };
+
+     // Set a timeout to clear the token after 5 minutes
+    //  setTimeout(() => {
+    //     logout();
+    //     alert('Token has expired. Please log in again.');
+    //   }, 5000);
+    useEffect(() => {
+        const logoutTimer = setTimeout(() => {
+          logoutHandler();
+          alert('Token has expired. Please log in again.');
+        }, 5*20*1000);
+    
+        // Clean up the timer when the component unmounts or when the token changes
+        return () => clearTimeout(logoutTimer);
+      }, [token]);
+
 
     const logoutHandler = () =>{
         setToken(null);
